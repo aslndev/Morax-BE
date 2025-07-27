@@ -11,6 +11,10 @@ import authRoutes from './routes/auth.js';
 import profileRoutes from './routes/profile.js';
 import courseRoutes from './routes/courses.js';
 import uploadRoutes from './routes/upload.js';
+import materialRoutes from './routes/materials.js';
+import commentRoutes from './routes/comments.js';
+import notificationRoutes from './routes/notifications.js';
+import adminRoutes from './routes/admin.js';
 
 dotenv.config();
 
@@ -31,6 +35,10 @@ app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/courses', materialRoutes);
+app.use('/api/courses', commentRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ 

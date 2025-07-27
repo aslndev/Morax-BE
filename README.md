@@ -14,7 +14,11 @@ morax-be/
 │   │   ├── AuthController.js
 │   │   ├── CourseController.js
 │   │   ├── ProfileController.js
-│   │   └── UploadController.js
+│   │   ├── UploadController.js
+│   │   ├── CourseMaterialController.js
+│   │   ├── CommentController.js
+│   │   ├── NotificationController.js
+│   │   └── AdminController.js
 │   ├── database/         # Database initialization
 │   │   └── init.js
 │   ├── middleware/       # Custom middleware
@@ -23,12 +27,19 @@ morax-be/
 │   ├── models/           # Data models
 │   │   ├── Course.js
 │   │   ├── Profile.js
-│   │   └── User.js
+│   │   ├── User.js
+│   │   ├── CourseMaterial.js
+│   │   ├── Comment.js
+│   │   └── Notification.js
 │   ├── routes/           # Route definitions
 │   │   ├── auth.js
 │   │   ├── courses.js
 │   │   ├── profile.js
-│   │   └── upload.js
+│   │   ├── upload.js
+│   │   ├── materials.js
+│   │   ├── comments.js
+│   │   ├── notifications.js
+│   │   └── admin.js
 │   ├── services/         # Business logic services
 │   │   ├── AuthService.js
 │   │   └── UploadService.js
@@ -45,6 +56,10 @@ morax-be/
 - **Authentication & Authorization**: JWT-based authentication dengan role-based access control
 - **User Management**: Registrasi, login, dan manajemen profil user
 - **Course Management**: CRUD operations untuk kursus dengan approval system
+- **Course Materials**: Manajemen materi kursus (PDF, PPT, YouTube, dll)
+- **Comments System**: Sistem komentar untuk kursus
+- **Notifications**: Sistem notifikasi untuk user
+- **Admin Dashboard**: Dashboard admin dengan statistik dan manajemen user
 - **File Upload**: Upload file menggunakan AnonymFile service
 - **Database**: SQLite dengan foreign key constraints
 - **Clean Architecture**: Separation of concerns dengan MVC pattern
@@ -121,6 +136,28 @@ morax-be/
 - `DELETE /api/courses/:id` - Delete course (protected)
 - `PUT /api/courses/:id/status` - Update course status (admin only)
 
+### Course Materials
+- `GET /api/courses/:courseId/materials` - Get materials by course ID (public)
+- `POST /api/courses/:courseId/materials` - Add material to course (protected)
+- `PUT /api/courses/:courseId/materials/:materialId` - Update material (protected)
+- `DELETE /api/courses/:courseId/materials/:materialId` - Delete material (protected)
+
+### Comments
+- `GET /api/courses/:courseId/comments` - Get comments by course ID (public)
+- `POST /api/courses/:courseId/comments` - Add comment to course (protected)
+- `PUT /api/courses/:courseId/comments/:commentId` - Update comment (protected)
+- `DELETE /api/courses/:courseId/comments/:commentId` - Delete comment (protected)
+
+### Notifications
+- `GET /api/notifications` - Get user notifications (protected)
+- `PUT /api/notifications/:id/read` - Mark notification as read (protected)
+
+### Admin
+- `GET /api/admin/stats` - Get dashboard statistics (admin only)
+- `GET /api/admin/users` - Get all users (admin only)
+- `PUT /api/admin/users/:id/role` - Update user role (admin only)
+- `DELETE /api/admin/users/:id` - Delete user (admin only)
+
 ### File Upload
 - `POST /api/upload` - Upload file (protected)
 
@@ -173,6 +210,46 @@ Authorization: Bearer <token>
 - `updated_at` (TEXT)
 - `approved_at` (TEXT)
 - `approved_by` (TEXT, FOREIGN KEY to profiles.id)
+
+### Course Materials Table
+- `id` (TEXT, PRIMARY KEY)
+- `course_id` (TEXT, FOREIGN KEY to courses.id)
+- `title` (TEXT)
+- `type` (TEXT, CHECK: pdf/ppt/docx/youtube/image/audio)
+- `file_url` (TEXT)
+- `youtube_url` (TEXT)
+- `youtube_embed_id` (TEXT)
+- `audio_url` (TEXT)
+- `file_size` (INTEGER)
+- `created_at` (TEXT)
+- `updated_at` (TEXT)
+
+### Comments Table
+- `id` (TEXT, PRIMARY KEY)
+- `course_id` (TEXT, FOREIGN KEY to courses.id)
+- `user_id` (TEXT, FOREIGN KEY to profiles.id)
+- `parent_id` (TEXT, FOREIGN KEY to comments.id)
+- `content` (TEXT)
+- `likes` (INTEGER, DEFAULT 0)
+- `dislikes` (INTEGER, DEFAULT 0)
+- `created_at` (TEXT)
+- `updated_at` (TEXT)
+
+### Comment Reactions Table
+- `id` (TEXT, PRIMARY KEY)
+- `comment_id` (TEXT, FOREIGN KEY to comments.id)
+- `user_id` (TEXT, FOREIGN KEY to profiles.id)
+- `reaction_type` (TEXT, CHECK: like/dislike)
+- `created_at` (TEXT)
+
+### Notifications Table
+- `id` (TEXT, PRIMARY KEY)
+- `user_id` (TEXT, FOREIGN KEY to profiles.id)
+- `type` (TEXT)
+- `title` (TEXT)
+- `message` (TEXT)
+- `read` (BOOLEAN, DEFAULT FALSE)
+- `created_at` (TEXT)
 
 ## 🧪 Testing
 

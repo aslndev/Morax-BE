@@ -28,6 +28,10 @@ class User {
     return this.db.prepare('SELECT * FROM users WHERE id = ?').get(id);
   }
 
+  getAll() {
+    return this.db.prepare('SELECT * FROM users').all();
+  }
+
   async verifyPassword(password, hash) {
     return await bcrypt.compare(password, hash);
   }
