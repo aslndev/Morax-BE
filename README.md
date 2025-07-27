@@ -23,7 +23,8 @@ morax-be/
 │   │   └── init.js
 │   ├── middleware/       # Custom middleware
 │   │   ├── auth.js       # Authentication middleware
-│   │   └── profile.js    # Profile loading middleware
+│   │   ├── profile.js    # Profile loading middleware
+│   │   └── cors.js       # CORS middleware
 │   ├── models/           # Data models
 │   │   ├── Course.js
 │   │   ├── Profile.js
@@ -61,6 +62,7 @@ morax-be/
 - **Notifications**: Sistem notifikasi untuk user
 - **Admin Dashboard**: Dashboard admin dengan statistik dan manajemen user
 - **File Upload**: Upload file menggunakan AnonymFile service
+- **CORS Support**: Cross-Origin Resource Sharing dengan konfigurasi fleksibel
 - **Database**: SQLite dengan foreign key constraints
 - **Clean Architecture**: Separation of concerns dengan MVC pattern
 
@@ -72,6 +74,7 @@ morax-be/
 - **Authentication**: JWT (jsonwebtoken)
 - **Password Hashing**: bcryptjs
 - **File Upload**: multer + AnonymFile API
+- **CORS**: Express CORS middleware
 - **Environment**: dotenv
 
 ## 📋 Prerequisites
@@ -106,6 +109,12 @@ morax-be/
    MAX_FILE_SIZE=52428800
    MAX_THUMBNAIL_SIZE=5242880
    ANONYMFILE_API_URL=https://anonymfile.com/api/v1/upload
+   
+   # CORS Configuration
+   CORS_ORIGIN=*
+   CORS_METHODS=GET,POST,PUT,DELETE,PATCH,OPTIONS
+   CORS_ALLOWED_HEADERS=Content-Type,Authorization,X-Requested-With,Accept,Origin
+   CORS_CREDENTIALS=true
    ```
 
 4. **Run the application**
@@ -170,6 +179,34 @@ API menggunakan JWT (JSON Web Token) untuk authentication. Token harus disertaka
 
 ```
 Authorization: Bearer <token>
+```
+
+## 🌐 CORS Configuration
+
+API mendukung Cross-Origin Resource Sharing (CORS) dengan konfigurasi yang fleksibel melalui environment variables:
+
+- `CORS_ORIGIN`: Origin yang diizinkan (default: `*` untuk semua origin)
+- `CORS_METHODS`: HTTP methods yang diizinkan (default: `GET,POST,PUT,DELETE,PATCH,OPTIONS`)
+- `CORS_ALLOWED_HEADERS`: Headers yang diizinkan (default: `Content-Type,Authorization,X-Requested-With,Accept,Origin`)
+- `CORS_CREDENTIALS`: Mengizinkan credentials (default: `true`)
+
+### Contoh Konfigurasi CORS:
+
+```env
+# Mengizinkan semua origin
+CORS_ORIGIN=*
+
+# Mengizinkan origin tertentu
+CORS_ORIGIN=http://localhost:3000,https://yourdomain.com
+
+# Mengizinkan semua methods
+CORS_METHODS=GET,POST,PUT,DELETE,PATCH,OPTIONS
+
+# Mengizinkan headers tertentu
+CORS_ALLOWED_HEADERS=Content-Type,Authorization,X-Requested-With,Accept,Origin
+
+# Mengizinkan credentials
+CORS_CREDENTIALS=true
 ```
 
 ## 👥 User Roles
