@@ -188,26 +188,43 @@ API mendukung Cross-Origin Resource Sharing (CORS) dengan konfigurasi yang fleks
 - `CORS_ORIGIN`: Origin yang diizinkan (default: `*` untuk semua origin)
 - `CORS_METHODS`: HTTP methods yang diizinkan (default: `GET,POST,PUT,DELETE,PATCH,OPTIONS`)
 - `CORS_ALLOWED_HEADERS`: Headers yang diizinkan (default: `Content-Type,Authorization,X-Requested-With,Accept,Origin`)
-- `CORS_CREDENTIALS`: Mengizinkan credentials (default: `true`)
+- `CORS_CREDENTIALS`: Mengizinkan credentials (default: `false` untuk menghindari CORS error)
+
+### ⚠️ Important CORS Notes:
+
+**Browser Security Restriction**: Browser tidak mengizinkan kombinasi `credentials: true` dengan `origin: '*'` untuk alasan keamanan. Jika Anda menggunakan `CORS_ORIGIN=*`, set `CORS_CREDENTIALS=false`.
 
 ### Contoh Konfigurasi CORS:
 
+#### **1. Development (Mengizinkan Semua Origin)**
 ```env
-# Mengizinkan semua origin
 CORS_ORIGIN=*
+CORS_CREDENTIALS=false
+```
 
-# Mengizinkan origin tertentu
-CORS_ORIGIN=http://localhost:3000,https://yourdomain.com
-
-# Mengizinkan semua methods
-CORS_METHODS=GET,POST,PUT,DELETE,PATCH,OPTIONS
-
-# Mengizinkan headers tertentu
-CORS_ALLOWED_HEADERS=Content-Type,Authorization,X-Requested-With,Accept,Origin
-
-# Mengizinkan credentials
+#### **2. Production (Origin Tertentu)**
+```env
+CORS_ORIGIN=https://morax.0x39.nl,https://www.morax.0x39.nl
 CORS_CREDENTIALS=true
 ```
+
+#### **3. Mengizinkan Methods Tertentu**
+```env
+CORS_METHODS=GET,POST,PUT,DELETE
+```
+
+#### **4. Mengizinkan Headers Tertentu**
+```env
+CORS_ALLOWED_HEADERS=Content-Type,Authorization,X-Requested-With
+```
+
+### 🔧 Troubleshooting CORS:
+
+**Error**: `Access to fetch at '...' from origin '...' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: The value of the 'Access-Control-Allow-Origin' header in the response must not be the wildcard '*' when the request's credentials mode is 'include'.`
+
+**Solution**: 
+1. Set `CORS_CREDENTIALS=false` jika menggunakan `CORS_ORIGIN=*`
+2. Atau gunakan origin spesifik: `CORS_ORIGIN=https://yourdomain.com`
 
 ## 👥 User Roles
 
